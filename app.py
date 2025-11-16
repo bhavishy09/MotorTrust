@@ -14,7 +14,7 @@ DATABASE = 'database.db'
 MODEL_PATH = 'model.pkl'
 
 def get_db():
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(DATABASE, timeout=10.0)
     conn.row_factory = sqlite3.Row
     return conn
 
