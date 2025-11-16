@@ -1,0 +1,35 @@
+Project title: Car Price Prediction Web App (Flask + SQLite + ML)
+
+Goal: Build a fully functional Flask web app that loads a pre-trained ML model (model.pkl) to predict used car prices. The app must include authentication, a car-themed attractive frontend, prediction saving, and a user dashboard.
+
+Main requirements:
+1. Tech stack: Python, Flask, SQLite, Jinja2 templates, Bootstrap (or Tailwind), scikit-learn (for model loading). Provide requirements.txt.
+2. Project structure:
+   - app.py (Flask app)
+   - templates/ (layout.html, index.html, login.html, signup.html, predict.html, dashboard.html, about.html)
+   - static/css/style.css, static/images/
+   - model.pkl (assumed present)
+   - database.db
+3. Authentication:
+   - Signup and login with hashed passwords (bcrypt or werkzeug.security).
+   - Session-based auth; protected routes for home, predict, dashboard.
+4. SQLite schema:
+   - users(id, username, email, password_hash)
+   - prediction_history(id, user_id, car_name, year, present_price, km_driven, fuel_type, seller_type, transmission, predicted_price, timestamp)
+   - Provide a script or function to initialize the DB.
+5. ML integration:
+   - Load model.pkl and any encoders/scalers if needed.
+   - Prediction inputs: Car Name, Year, Present Price, KM Driven, Fuel Type, Seller Type, Transmission.
+   - Return predicted price formatted as currency (₹).
+   - Save each prediction with inputs and result to prediction_history.
+6. Frontend & UX:
+   - Attractive car-themed UI (black, red, metallic grey palette), responsive, modern hero on home page.
+   - Layout template with header (nav links: Home, Predict, Dashboard, About Us, Logout) and footer.
+   - Predict page: form + result card + “Save” handled automatically.
+   - Dashboard: table of user’s past predictions with date and delete option.
+   - About Us page with project & developer info (Bhavishya Katariya).
+7. Extra details:
+   - Input validations and user-friendly error messages.
+   - Use environment variable for Flask SECRET_KEY.
+   - Clear README with run instructions: how to install, initialize DB, place model.pkl, and run `python app.py`.
+Deliverable: Generate all files (app.py, templates, CSS, DB init script, requirements.txt) ready to run on Replit. Keep code clean, well-commented, and minimal external dependencies.
