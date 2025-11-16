@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Car Price Predictor{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'car-black': '#1a1a1a',
+                        'car-red': '#dc2626',
+                        'car-grey': '#9ca3af',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-car-black text-white min-h-screen flex flex-col">
+    <nav class="bg-gradient-to-r from-car-black via-gray-900 to-car-black border-b-2 border-car-red">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="{{ url_for('index') }}" class="text-2xl font-bold text-car-red hover:text-red-400 transition-colors">
+                    🚗 CarPredictor
+                </a>
+                <div class="flex space-x-6">
+                    <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                    {% if session.user_id %}
+                        <a href="{{ url_for('predict') }}" class="nav-link">Predict</a>
+                        <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+                        <a href="{{ url_for('about') }}" class="nav-link">About Us</a>
+                        <a href="{{ url_for('logout') }}" class="nav-link text-car-red">Logout ({{ session.username }})</a>
+                    {% else %}
+                        <a href="{{ url_for('about') }}" class="nav-link">About Us</a>
+                        <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                        <a href="{{ url_for('signup') }}" class="btn-primary">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mx-auto px-4 mt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} p-4 rounded-lg mb-4 {% if category == 'error' %}bg-red-900 border-red-700{% elif category == 'success' %}bg-green-900 border-green-700{% else %}bg-yellow-900 border-yellow-700{% endif %} border-2">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gradient-to-r from-car-black via-gray-900 to-car-black border-t-2 border-car-red py-6 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-car-grey">&copy; 2024 Car Price Predictor. Developed by <span class="text-car-red font-semibold">Bhavishya Katariya</span></p>
+            <p class="text-sm text-car-grey mt-2">Predict your car's value with ML-powered accuracy</p>
+        </div>
+    </footer>
+</body>
+</html>

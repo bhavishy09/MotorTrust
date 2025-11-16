@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Login - Car Price Predictor{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-8">
+    <div class="bg-gray-900 p-8 rounded-lg border-2 border-gray-700 shadow-xl">
+        <h2 class="text-3xl font-bold text-center mb-6 text-car-red">Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="mb-6">
+                <label for="username" class="block text-car-grey mb-2 font-semibold">Username</label>
+                <input type="text" id="username" name="username" required
+                       class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red transition-colors">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-car-grey mb-2 font-semibold">Password</label>
+                <input type="password" id="password" name="password" required
+                       class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red transition-colors">
+            </div>
+            <button type="submit" class="w-full btn-primary py-3 text-lg">
+                Login
+            </button>
+        </form>
+        <p class="text-center mt-6 text-car-grey">
+            Don't have an account? <a href="{{ url_for('signup') }}" class="text-car-red hover:underline font-semibold">Sign up here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

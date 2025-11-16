@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}About Us - Car Price Predictor{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-4xl font-bold text-center mb-8 text-car-red">About This Project</h2>
+    
+    <div class="bg-gray-900 p-8 rounded-lg border-2 border-gray-700 mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-car-red">🚗 Car Price Prediction Web App</h3>
+        <p class="text-car-grey mb-4 leading-relaxed">
+            This web application leverages machine learning to predict the selling price of used cars based on various features 
+            such as age, mileage, fuel type, and transmission. Our goal is to provide car owners and buyers with accurate 
+            price estimates to make informed decisions.
+        </p>
+        <p class="text-car-grey mb-4 leading-relaxed">
+            The prediction model is trained on real-world car data and considers multiple factors including:
+        </p>
+        <ul class="list-disc list-inside text-car-grey space-y-2 ml-4">
+            <li>Year of manufacture and current age</li>
+            <li>Current showroom price of the model</li>
+            <li>Total kilometers driven</li>
+            <li>Fuel type (Petrol, Diesel, CNG)</li>
+            <li>Seller type (Dealer vs Individual)</li>
+            <li>Transmission type (Manual vs Automatic)</li>
+        </ul>
+    </div>
+
+    <div class="bg-gradient-to-br from-car-red to-red-700 p-8 rounded-lg border-2 border-red-600 shadow-xl mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-white">👨‍💻 Developer Information</h3>
+        <div class="text-white">
+            <p class="mb-2"><strong>Name:</strong> Bhavishya Katariya</p>
+            <p class="mb-2"><strong>Role:</strong> Full-Stack Developer & ML Engineer</p>
+            <p class="mb-4"><strong>Project:</strong> Car Price Prediction System</p>
+            <p class="text-gray-200 leading-relaxed">
+                This project demonstrates the integration of machine learning models with modern web technologies 
+                to create practical, user-friendly applications. It combines Flask backend, SQLite database, 
+                and scikit-learn ML models with a responsive, car-themed frontend design.
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-gray-900 p-8 rounded-lg border-2 border-gray-700">
+        <h3 class="text-2xl font-bold mb-4 text-car-red">🛠️ Technologies Used</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="bg-gray-800 p-4 rounded-lg text-center">
+                <p class="text-3xl mb-2">🐍</p>
+                <p class="text-car-grey font-semibold">Python & Flask</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg text-center">
+                <p class="text-3xl mb-2">🗄️</p>
+                <p class="text-car-grey font-semibold">SQLite Database</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg text-center">
+                <p class="text-3xl mb-2">🤖</p>
+                <p class="text-car-grey font-semibold">Scikit-learn ML</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg text-center">
+                <p class="text-3xl mb-2">🎨</p>
+                <p class="text-car-grey font-semibold">Tailwind CSS</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg text-center">
+                <p class="text-3xl mb-2">🔐</p>
+                <p class="text-car-grey font-semibold">Secure Auth</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg text-center">
+                <p class="text-3xl mb-2">📱</p>
+                <p class="text-car-grey font-semibold">Responsive Design</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-8">
+        <a href="{{ url_for('predict') }}" class="btn-primary inline-block px-8 py-3 text-lg">
+            Try the Predictor
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+
+{% block title %}Predict Price - Car Price Predictor{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-4xl font-bold text-center mb-8 text-car-red">Predict Your Car's Price</h2>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-gray-900 p-8 rounded-lg border-2 border-gray-700">
+            <h3 class="text-2xl font-bold mb-6 text-car-red">Enter Car Details</h3>
+            <form method="POST" action="{{ url_for('predict') }}">
+                <div class="mb-4">
+                    <label for="car_name" class="block text-car-grey mb-2 font-semibold">Car Name</label>
+                    <input type="text" id="car_name" name="car_name" required
+                           value="{{ car_name if car_name else '' }}"
+                           placeholder="e.g., Honda City, Maruti Swift"
+                           class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red">
+                </div>
+
+                <div class="mb-4">
+                    <label for="year" class="block text-car-grey mb-2 font-semibold">Year of Purchase</label>
+                    <input type="number" id="year" name="year" required min="1990" max="2024"
+                           value="{{ year if year else '' }}"
+                           placeholder="e.g., 2018"
+                           class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red">
+                </div>
+
+                <div class="mb-4">
+                    <label for="present_price" class="block text-car-grey mb-2 font-semibold">Current Showroom Price (₹ Lakhs)</label>
+                    <input type="number" id="present_price" name="present_price" required step="0.01" min="0.5"
+                           value="{{ present_price if present_price else '' }}"
+                           placeholder="e.g., 8.5"
+                           class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red">
+                </div>
+
+                <div class="mb-4">
+                    <label for="km_driven" class="block text-car-grey mb-2 font-semibold">Kilometers Driven</label>
+                    <input type="number" id="km_driven" name="km_driven" required min="0"
+                           value="{{ km_driven if km_driven else '' }}"
+                           placeholder="e.g., 45000"
+                           class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red">
+                </div>
+
+                <div class="mb-4">
+                    <label for="fuel_type" class="block text-car-grey mb-2 font-semibold">Fuel Type</label>
+                    <select id="fuel_type" name="fuel_type" required
+                            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red">
+                        <option value="Petrol" {% if fuel_type == 'Petrol' %}selected{% endif %}>Petrol</option>
+                        <option value="Diesel" {% if fuel_type == 'Diesel' %}selected{% endif %}>Diesel</option>
+                        <option value="CNG" {% if fuel_type == 'CNG' %}selected{% endif %}>CNG</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="seller_type" class="block text-car-grey mb-2 font-semibold">Seller Type</label>
+                    <select id="seller_type" name="seller_type" required
+                            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red">
+                        <option value="Dealer" {% if seller_type == 'Dealer' %}selected{% endif %}>Dealer</option>
+                        <option value="Individual" {% if seller_type == 'Individual' %}selected{% endif %}>Individual</option>
+                    </select>
+                </div>
+
+                <div class="mb-6">
+                    <label for="transmission" class="block text-car-grey mb-2 font-semibold">Transmission</label>
+                    <select id="transmission" name="transmission" required
+                            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-car-red">
+                        <option value="Manual" {% if transmission == 'Manual' %}selected{% endif %}>Manual</option>
+                        <option value="Automatic" {% if transmission == 'Automatic' %}selected{% endif %}>Automatic</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full btn-primary py-3 text-lg">
+                    Predict Price
+                </button>
+            </form>
+        </div>
+
+        {% if prediction %}
+        <div class="bg-gradient-to-br from-car-red to-red-700 p-8 rounded-lg border-2 border-red-600 shadow-xl">
+            <h3 class="text-2xl font-bold mb-6 text-white text-center">Prediction Result</h3>
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg mb-6">
+                <p class="text-center text-sm text-gray-200 mb-2">Estimated Selling Price</p>
+                <p class="text-5xl font-bold text-center text-white">
+                    ₹{{ "%.2f"|format(prediction) }} L
+                </p>
+            </div>
+            <div class="text-white space-y-2 text-sm">
+                <p><strong>Car:</strong> {{ car_name }}</p>
+                <p><strong>Year:</strong> {{ year }}</p>
+                <p><strong>Showroom Price:</strong> ₹{{ present_price }} Lakhs</p>
+                <p><strong>KM Driven:</strong> {{ "{:,}".format(km_driven) }} km</p>
+                <p><strong>Fuel:</strong> {{ fuel_type }}</p>
+                <p><strong>Seller:</strong> {{ seller_type }}</p>
+                <p><strong>Transmission:</strong> {{ transmission }}</p>
+            </div>
+            <p class="text-center mt-6 text-white text-sm bg-white bg-opacity-20 p-3 rounded">
+                ✓ Prediction saved to your dashboard
+            </p>
+        </div>
+        {% else %}
+        <div class="bg-gray-900 p-8 rounded-lg border-2 border-gray-700 flex items-center justify-center">
+            <div class="text-center">
+                <div class="text-6xl mb-4">🎯</div>
+                <p class="text-car-grey text-lg">Fill in the form to get your car's predicted price</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
