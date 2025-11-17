@@ -3,63 +3,62 @@ import sqlite3
 import pickle
 from datetime import datetime
 from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, g
 from werkzeug.security import generate_password_hash, check_password_hash
 import numpy as np
+from services.predict import get_car_price_prediction
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SESSION_SECRET', 'dev-secret-key-change-in-production')
 
 DATABASE = 'database.db'
-MODEL_PATH = 'models/car_price_model.pkl'
 
 def get_db():
-    conn = sqlite3.connect(DATABASE, timeout=10.0)
-    conn.row_factory = sqlite3.Row
-    return conn
+    if 'db' not in g:
+        g.db = sqlite3.connect(DATABASE, timeout=10.0)
+        g.db.row_factory = sqlite3.Row
+    return g.db
+
+@app.teardown_appcontext
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
 def init_db():
-    conn = get_db()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS prediction_history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            car_name TEXT NOT NULL,
-            year INTEGER NOT NULL,
-            present_price REAL NOT NULL,
-            km_driven INTEGER NOT NULL,
-            fuel_type TEXT NOT NULL,
-            seller_type TEXT NOT NULL,
-            transmission TEXT NOT NULL,
-            predicted_price REAL NOT NULL,
-            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users (id)
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    with app.app_context():
+        conn = get_db()
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS prediction_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                car_name TEXT NOT NULL,
+                year INTEGER NOT NULL,
+                present_price REAL NOT NULL,
+                km_driven INTEGER NOT NULL,
+                fuel_type TEXT NOT NULL,
+                seller_type TEXT NOT NULL,
+                transmission TEXT NOT NULL,
+                mileage REAL NOT NULL,
+                max_power REAL NOT NULL,
+                engine TEXT NOT NULL,
+                torque TEXT NOT NULL,
+                predicted_price REAL NOT NULL,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            )
+        ''')
+        conn.commit()
 
-def load_model():
-    try:
-        if os.path.exists(MODEL_PATH):
-            with open(MODEL_PATH, 'rb') as f:
-                return pickle.load(f)
-        else:
-            return None
-    except Exception as e:
-        print(f"Error loading model: {e}")
-        return None
-
-model = load_model()
 
 def login_required(f):
     @wraps(f)
@@ -102,7 +101,6 @@ def signup():
                 (username, email, password_hash)
             )
             conn.commit()
-            conn.close()
             flash('Account created successfully! Please login.', 'success')
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
@@ -123,7 +121,6 @@ def login():
         
         conn = get_db()
         user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
-        conn.close()
         
         if user and check_password_hash(user['password_hash'], password):
             session['user_id'] = user['id']
@@ -155,33 +152,29 @@ def predict():
             seller_type = request.form.get('seller_type', '')
             transmission = request.form.get('transmission', '')
             
+            mileage = float(request.form.get('mileage', 0))
+            max_power = float(request.form.get('max_power', 0))
+            engine = request.form.get('engine', '').strip()
+            torque = request.form.get('torque', '').strip()
+            
             if not car_name or year < 1900 or present_price <= 0 or km_driven < 0:
                 flash('Please provide valid input values.', 'error')
                 return render_template('predict.html')
             
-            if model is None:
-                predicted_price = present_price * 0.65
-            else:
-                fuel_encoded = 1 if fuel_type == 'Petrol' else 0
-                seller_encoded = 1 if seller_type == 'Individual' else 0
-                transmission_encoded = 1 if transmission == 'Manual' else 0
-                current_year = datetime.now().year
-                years_old = current_year - year
-                
-                features = np.array([[present_price, km_driven, fuel_encoded, 
-                                    seller_encoded, transmission_encoded, years_old]])
-                predicted_price = float(model.predict(features)[0])
+            predicted_price = get_car_price_prediction(
+                year, present_price, km_driven, fuel_type, seller_type, transmission,
+                mileage, max_power, engine, torque
+            )
             
             conn = get_db()
             conn.execute('''
                 INSERT INTO prediction_history 
                 (user_id, car_name, year, present_price, km_driven, fuel_type, 
-                 seller_type, transmission, predicted_price)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 seller_type, transmission, mileage, max_power, engine, torque, predicted_price)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (session['user_id'], car_name, year, present_price, km_driven,
-                  fuel_type, seller_type, transmission, predicted_price))
+                  fuel_type, seller_type, transmission, mileage, max_power, engine, torque, predicted_price))
             conn.commit()
-            conn.close()
             
             return render_template('predict.html', 
                                  prediction=predicted_price,
@@ -191,7 +184,11 @@ def predict():
                                  km_driven=km_driven,
                                  fuel_type=fuel_type,
                                  seller_type=seller_type,
-                                 transmission=transmission)
+                                 transmission=transmission,
+                                 mileage=mileage,
+                                 max_power=max_power,
+                                 engine=engine,
+                                 torque=torque)
         
         except ValueError:
             flash('Invalid input. Please check your values.', 'error')
@@ -211,7 +208,6 @@ def dashboard():
         WHERE user_id = ? 
         ORDER BY timestamp DESC
     ''', (session['user_id'],)).fetchall()
-    conn.close()
     
     return render_template('dashboard.html', predictions=predictions)
 
@@ -224,7 +220,6 @@ def delete_prediction(prediction_id):
         WHERE id = ? AND user_id = ?
     ''', (prediction_id, session['user_id']))
     conn.commit()
-    conn.close()
     
     flash('Prediction deleted successfully.', 'success')
     return redirect(url_for('dashboard'))
@@ -235,4 +230,4 @@ def about():
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)
