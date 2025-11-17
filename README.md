@@ -174,3 +174,4 @@ This project is for educational purposes.
 ---
 
 Built with Flask, Tailwind CSS, and scikit-learn
+# MotorTrust
