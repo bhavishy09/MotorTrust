@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SESSION_SECRET', 'dev-secret-key-change-in-production')
 
 DATABASE = 'database.db'
-MODEL_PATH = 'model.pkl'
+MODEL_PATH = 'models/car_price_model.pkl'
 
 def get_db():
     conn = sqlite3.connect(DATABASE, timeout=10.0)
@@ -235,4 +235,4 @@ def about():
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
