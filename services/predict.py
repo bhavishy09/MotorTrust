@@ -20,7 +20,7 @@ def load_model():
 
 model = load_model()
 
-def get_car_price_prediction(year, present_price, km_driven, fuel_type, seller_type, transmission, mileage, max_power, engine, torque):
+def get_car_price_prediction(year, present_price, km_driven, fuel_type, seller_type, transmission):
     if model is None:
         # Fallback if model is not loaded
         return present_price * 0.65
@@ -30,13 +30,9 @@ def get_car_price_prediction(year, present_price, km_driven, fuel_type, seller_t
     transmission_encoded = 1 if transmission == 'Manual' else 0
     current_year = datetime.now().year
     years_old = current_year - year
-    
-    engine_val = float(re.findall(r'\d+', engine)[0])
-    torque_val = float(re.findall(r'\d+', torque)[0])
 
     features = np.array([[present_price, km_driven, fuel_encoded, 
-                          seller_encoded, transmission_encoded, years_old,
-                          mileage, max_power, engine_val, torque_val]])
+                          seller_encoded, transmission_encoded, years_old]])
     
     predicted_price = float(model.predict(features)[0])
     return predicted_price

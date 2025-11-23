@@ -6,6 +6,7 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, g
 from werkzeug.security import generate_password_hash, check_password_hash
 import numpy as np
+import re
 from services.predict import get_car_price_prediction
 
 app = Flask(__name__)
@@ -58,6 +59,13 @@ def init_db():
             )
         ''')
         conn.commit()
+
+@app.before_request
+def initialize_database():
+    if not getattr(g, 'db_initialized', False):
+        init_db()
+        g.db_initialized = True
+
 
 
 def login_required(f):
@@ -145,38 +153,95 @@ def predict():
     if request.method == 'POST':
         try:
             car_name = request.form.get('car_name', '').strip()
-            year = int(request.form.get('year', 0))
-            present_price = float(request.form.get('present_price', 0))
-            km_driven = int(request.form.get('km_driven', 0))
+            if not car_name:
+                flash('Car name is required.', 'error')
+                return render_template('predict.html')
+
+            try:
+                year = int(request.form.get('year') or 0)
+                if year < 1900 or year > datetime.now().year:
+                    flash('Please enter a valid year.', 'error')
+                    return render_template('predict.html')
+            except ValueError:
+                flash('Year must be a valid number.', 'error')
+                return render_template('predict.html')
+
+            try:
+                present_price = float(request.form.get('present_price') or 0)
+                if present_price <= 0:
+                    flash('Present price must be greater than zero.', 'error')
+                    return render_template('predict.html')
+            except ValueError:
+                flash('Present price must be a valid number.', 'error')
+                return render_template('predict.html')
+
+            try:
+                km_driven = int(request.form.get('km_driven') or 0)
+                if km_driven < 0:
+                    flash('Kilometers driven cannot be negative.', 'error')
+                    return render_template('predict.html')
+            except ValueError:
+                flash('Kilometers driven must be a valid number.', 'error')
+                return render_template('predict.html')
+
             fuel_type = request.form.get('fuel_type', '')
             seller_type = request.form.get('seller_type', '')
             transmission = request.form.get('transmission', '')
-            
-            mileage = float(request.form.get('mileage', 0))
-            max_power = float(request.form.get('max_power', 0))
-            engine = request.form.get('engine', '').strip()
-            torque = request.form.get('torque', '').strip()
-            
-            if not car_name or year < 1900 or present_price <= 0 or km_driven < 0:
-                flash('Please provide valid input values.', 'error')
+
+            if not all([fuel_type, seller_type, transmission]):
+                flash('Please select a valid option for fuel type, seller type, and transmission.', 'error')
                 return render_template('predict.html')
-            
+
+            try:
+                mileage = float(request.form.get('mileage') or 0)
+                if mileage < 0:
+                    flash('Mileage cannot be negative.', 'error')
+                    return render_template('predict.html')
+            except ValueError:
+                flash('Mileage must be a valid number.', 'error')
+                return render_template('predict.html')
+
+            try:
+                max_power = float(request.form.get('max_power') or 0)
+                if max_power < 0:
+                    flash('Max power cannot be negative.', 'error')
+                    return render_template('predict.html')
+            except ValueError:
+                flash('Max power must be a valid number.', 'error')
+                return render_template('predict.html')
+
+            engine_str = request.form.get('engine', '').strip()
+            torque_str = request.form.get('torque', '').strip()
+
+            try:
+                engine_digits = re.findall(r'\d+\.?\d*', engine_str)
+                engine_val = float(engine_digits[0]) if engine_digits else 0.0
+            except (ValueError, IndexError):
+                flash('Invalid format for engine. Please use a valid number.', 'error')
+                return render_template('predict.html')
+
+            try:
+                torque_digits = re.findall(r'\d+\.?\d*', torque_str)
+                torque_val = float(torque_digits[0]) if torque_digits else 0.0
+            except (ValueError, IndexError):
+                flash('Invalid format for torque. Please use a valid number.', 'error')
+                return render_template('predict.html')
+
             predicted_price = get_car_price_prediction(
-                year, present_price, km_driven, fuel_type, seller_type, transmission,
-                mileage, max_power, engine, torque
+                year, present_price, km_driven, fuel_type, seller_type, transmission
             )
-            
+
             conn = get_db()
             conn.execute('''
-                INSERT INTO prediction_history 
-                (user_id, car_name, year, present_price, km_driven, fuel_type, 
+                INSERT INTO prediction_history
+                (user_id, car_name, year, present_price, km_driven, fuel_type,
                  seller_type, transmission, mileage, max_power, engine, torque, predicted_price)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (session['user_id'], car_name, year, present_price, km_driven,
-                  fuel_type, seller_type, transmission, mileage, max_power, engine, torque, predicted_price))
+                  fuel_type, seller_type, transmission, mileage, max_power, engine_str, torque_str, predicted_price))
             conn.commit()
-            
-            return render_template('predict.html', 
+
+            return render_template('predict.html',
                                  prediction=predicted_price,
                                  car_name=car_name,
                                  year=year,
@@ -187,16 +252,13 @@ def predict():
                                  transmission=transmission,
                                  mileage=mileage,
                                  max_power=max_power,
-                                 engine=engine,
-                                 torque=torque)
-        
-        except ValueError:
-            flash('Invalid input. Please check your values.', 'error')
-            return render_template('predict.html')
+                                 engine=engine_str,
+                                 torque=torque_str)
+
         except Exception as e:
             flash(f'An error occurred: {str(e)}', 'error')
             return render_template('predict.html')
-    
+
     return render_template('predict.html')
 
 @app.route('/dashboard')
@@ -229,5 +291,4 @@ def about():
     return render_template('about.html')
 
 if __name__ == '__main__':
-    init_db()
     app.run(host='0.0.0.0', port=5002, debug=True)
