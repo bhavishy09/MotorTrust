@@ -3,76 +3,85 @@
 {% block title %}About Us - Car Price Predictor{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
-    <h2 class="text-4xl font-bold text-center mb-8 text-car-red">About This Project</h2>
+<div class="max-w-5xl mx-auto py-12 px-4">
+    <div class="text-center mb-16 relative">
+        <h2 class="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-600 inline-block">
+            About This Project
+        </h2>
+        <div class="w-24 h-1.5 bg-brand-primary mx-auto rounded-full mt-4"></div>
+    </div>
     
-    <div class="bg-gray-900 p-8 rounded-lg border-2 border-gray-700 mb-8">
-        <h3 class="text-2xl font-bold mb-4 text-car-red">🚗 Car Price Prediction Web App</h3>
-        <p class="text-car-grey mb-4 leading-relaxed">
-            This web application leverages machine learning to predict the selling price of used cars based on various features 
-            such as age, mileage, fuel type, and transmission. Our goal is to provide car owners and buyers with accurate 
-            price estimates to make informed decisions.
+    <div class="bg-white p-12 rounded-3xl border border-brand-border shadow-sm hover:shadow-md transition-shadow mb-10 overflow-hidden relative">
+        <!-- decorative blur -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-primary rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+        
+        <h3 class="text-3xl font-bold mb-6 text-brand-dark flex items-center relative z-10">
+            <span class="text-4xl mr-4 bg-blue-50 p-3 rounded-2xl shadow-sm">🚗</span> Car Price Prediction Engine
+        </h3>
+        <p class="text-gray-600 mb-6 leading-relaxed text-xl relative z-10">
+            This web application leverages advanced machine learning to predict the selling price of used cars based on critical market features. 
+            Our goal is to provide car owners, buyers, and dealerships with lightning-fast, <strong class="text-brand-primary">data-driven price estimates</strong> to make informed financial decisions.
         </p>
-        <p class="text-car-grey mb-4 leading-relaxed">
-            The prediction model is trained on real-world car data and considers multiple factors including:
-        </p>
-        <ul class="list-disc list-inside text-car-grey space-y-2 ml-4">
-            <li>Year of manufacture and current age</li>
-            <li>Current showroom price of the model</li>
-            <li>Total kilometers driven</li>
-            <li>Fuel type (Petrol, Diesel, CNG)</li>
-            <li>Seller type (Dealer vs Individual)</li>
-            <li>Transmission type (Manual vs Automatic)</li>
-        </ul>
+        
+        <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 relative z-10">
+            <p class="text-gray-800 font-bold text-xl mb-4">
+                The prediction core isolates key valuation factors:
+            </p>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 text-lg">
+                <li class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100"><span class="w-2.5 h-2.5 bg-brand-primary rounded-full mr-3"></span>Year of Manuf. / Current Age</li>
+                <li class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100"><span class="w-2.5 h-2.5 bg-brand-primary rounded-full mr-3"></span>Showroom Baseline Price</li>
+                <li class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100"><span class="w-2.5 h-2.5 bg-brand-primary rounded-full mr-3"></span>Total Kilometers Driven</li>
+                <li class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100"><span class="w-2.5 h-2.5 bg-brand-primary rounded-full mr-3"></span>Fuel Type Efficiency</li>
+                <li class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100"><span class="w-2.5 h-2.5 bg-brand-primary rounded-full mr-3"></span>Seller Category</li>
+                <li class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100"><span class="w-2.5 h-2.5 bg-brand-primary rounded-full mr-3"></span>Transmission Config</li>
+            </ul>
+        </div>
     </div>
 
-    <div class="bg-gradient-to-br from-car-red to-red-700 p-8 rounded-lg border-2 border-red-600 shadow-xl mb-8">
-        <h3 class="text-2xl font-bold mb-4 text-white">👨‍💻 Developer Information</h3>
-        <div class="text-white">
-            <p class="mb-2"><strong>Name:</strong> Bhavishya Katariya</p>
-            <p class="mb-2"><strong>Role:</strong> Full-Stack Developer & ML Engineer</p>
-            <p class="mb-4"><strong>Project:</strong> Car Price Prediction System</p>
-            <p class="text-gray-200 leading-relaxed">
-                This project demonstrates the integration of machine learning models with modern web technologies 
-                to create practical, user-friendly applications. It combines Flask backend, SQLite database, 
-                and scikit-learn ML models with a responsive, car-themed frontend design.
+    <div class="bg-gradient-to-br from-brand-primary to-blue-700 p-12 rounded-3xl shadow-lg hover:shadow-xl transition-shadow mb-12 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-white opacity-5 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+        
+        <h3 class="text-3xl font-extrabold mb-8 flex items-center relative z-10">
+            <span class="text-4xl mr-4 bg-white/20 p-3 rounded-2xl backdrop-blur-sm">👨‍💻</span> Developer Insights
+        </h3>
+        <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center gap-6 mb-6">
+                <div>
+                    <h4 class="text-2xl font-bold">Bhavishya Katariya</h4>
+                    <p class="text-blue-200 text-lg font-medium mt-1">Full-Stack Developer & ML Engineer</p>
+                </div>
+            </div>
+            <p class="text-blue-50 leading-relaxed pt-6 border-t border-white/20 text-xl font-light">
+                This project demonstrates the powerful integration of machine learning algorithms with modern web technologies. 
+                It effectively bridges an intricate Python backend with a beautifully optimized, highly responsive styling framework to ensure a top-tier user experience.
             </p>
         </div>
     </div>
 
-    <div class="bg-gray-900 p-8 rounded-lg border-2 border-gray-700">
-        <h3 class="text-2xl font-bold mb-4 text-car-red">🛠️ Technologies Used</h3>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div class="bg-gray-800 p-4 rounded-lg text-center">
-                <p class="text-3xl mb-2">🐍</p>
-                <p class="text-car-grey font-semibold">Python & Flask</p>
+    <div class="text-center mb-12">
+        <h3 class="text-3xl font-extrabold text-brand-dark tracking-tight inline-block mb-10">
+            Built With Modern Technologies
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-6 text-center">
+            <div class="bg-white flex flex-col items-center justify-center p-8 rounded-3xl border border-brand-border hover:border-brand-primary hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <div class="text-5xl mb-4 bg-gray-50 shadow-sm p-4 rounded-full">🐍</div>
+                <p class="text-gray-900 font-bold text-lg">Python Core</p>
             </div>
-            <div class="bg-gray-800 p-4 rounded-lg text-center">
-                <p class="text-3xl mb-2">🗄️</p>
-                <p class="text-car-grey font-semibold">SQLite Database</p>
+            <div class="bg-white flex flex-col items-center justify-center p-8 rounded-3xl border border-brand-border hover:border-brand-primary hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <div class="text-5xl mb-4 bg-gray-50 shadow-sm p-4 rounded-full">🤖</div>
+                <p class="text-gray-900 font-bold text-lg">Scikit-learn ML</p>
             </div>
-            <div class="bg-gray-800 p-4 rounded-lg text-center">
-                <p class="text-3xl mb-2">🤖</p>
-                <p class="text-car-grey font-semibold">Scikit-learn ML</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded-lg text-center">
-                <p class="text-3xl mb-2">🎨</p>
-                <p class="text-car-grey font-semibold">Tailwind CSS</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded-lg text-center">
-                <p class="text-3xl mb-2">🔐</p>
-                <p class="text-car-grey font-semibold">Secure Auth</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded-lg text-center">
-                <p class="text-3xl mb-2">📱</p>
-                <p class="text-car-grey font-semibold">Responsive Design</p>
+            <div class="bg-white flex flex-col items-center justify-center p-8 rounded-3xl border border-brand-border hover:border-brand-primary hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <div class="text-5xl mb-4 bg-gray-50 shadow-sm p-4 rounded-full">🎨</div>
+                <p class="text-gray-900 font-bold text-lg">Tailwind UI</p>
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-8">
-        <a href="{{ url_for('predict') }}" class="btn-primary inline-block px-8 py-3 text-lg">
-            Try the Predictor
+    <div class="text-center mb-16 mt-8">
+        <a href="{{ url_for('predict') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl p-4 px-10 font-bold text-white bg-brand-primary hover:bg-brand-hover shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-xl">
+            <span class="mr-2">Try the Predictor</span>
+            <span class="group-hover:translate-x-1 transition-transform duration-300">→</span>
         </a>
     </div>
 </div>

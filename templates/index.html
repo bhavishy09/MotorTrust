@@ -3,56 +3,59 @@
 {% block title %}Home - Car Price Predictor{% endblock %}
 
 {% block content %}
-<div class="hero-section text-center py-16">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-car-red to-red-400 bg-clip-text text-transparent">
-            Car Price Predictor
+<div class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 text-center pt-20 pb-20 rounded-3xl overflow-hidden shadow-sm border border-brand-border mb-16 mt-6 max-w-6xl mx-auto">
+    <!-- Decorative background blobs -->
+    <div class="absolute top-0 center w-full h-full overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-brand-primary rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+        <div class="absolute top-[20%] left-[-10%] w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto relative z-10 px-4">
+        <div class="text-7xl mb-6 inline-block transform hover:scale-110 transition-transform duration-500 cursor-default">🚗</div>
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 text-brand-dark tracking-tight leading-tight">
+            Discover the True Value <br/>
+            <span class="text-brand-primary bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-blue-600">of Your Car</span>
         </h1>
-        <p class="text-2xl text-car-grey mb-8">
-            Discover the true value of your car with ML-powered predictions
+        <p class="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Get instant, highly accurate car price predictions powered by advanced machine learning models. Built for trust and precision.
         </p>
-        <div class="flex justify-center space-x-4 mb-12">
+        <div class="flex justify-center space-x-4 mb-4">
             {% if session.user_id %}
-                <a href="{{ url_for('predict') }}" class="btn-primary text-lg px-8 py-3">
+                <a href="{{ url_for('predict') }}" class="bg-brand-primary hover:bg-brand-hover text-white text-lg px-10 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
                     Start Prediction
                 </a>
-                <a href="{{ url_for('dashboard') }}" class="btn-secondary text-lg px-8 py-3">
+                <a href="{{ url_for('dashboard') }}" class="bg-white hover:bg-gray-50 text-gray-700 border border-brand-border text-lg px-10 py-4 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md hover:-translate-y-1">
                     View Dashboard
                 </a>
             {% else %}
-                <a href="{{ url_for('signup') }}" class="btn-primary text-lg px-8 py-3">
-                    Get Started
+                <a href="{{ url_for('signup') }}" class="bg-brand-primary hover:bg-brand-hover text-white text-lg px-10 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+                    Get Started Free
                 </a>
-                <a href="{{ url_for('login') }}" class="btn-secondary text-lg px-8 py-3">
+                <a href="{{ url_for('login') }}" class="bg-white hover:bg-gray-50 text-gray-700 border border-brand-border text-lg px-10 py-4 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md hover:-translate-y-1">
                     Login
                 </a>
             {% endif %}
         </div>
     </div>
-
-    <div class="car-hero-image bg-gradient-to-b from-transparent via-gray-900 to-car-black py-16">
-        <div class="text-8xl">🚗</div>
-        <p class="text-car-grey mt-4 italic">AI-Powered Vehicle Valuation</p>
-    </div>
 </div>
 
 <div class="features-section py-16">
-    <h2 class="text-4xl font-bold text-center mb-12 text-car-red">Why Choose Our Predictor?</h2>
+    <h2 class="text-4xl font-bold text-center mb-12 text-brand-dark tracking-tight">Why Choose Our Predictor?</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="feature-card bg-gray-900 p-8 rounded-lg border-2 border-gray-700 hover:border-car-red transition-all">
+        <div class="bg-white p-8 rounded-xl border border-brand-border hover:border-brand-primary hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             <div class="text-5xl mb-4">🎯</div>
-            <h3 class="text-2xl font-bold mb-3 text-car-red">Accurate Predictions</h3>
-            <p class="text-car-grey">ML algorithms trained on real market data to give you precise valuations</p>
+            <h3 class="text-2xl font-bold mb-3 text-brand-dark">Accurate Predictions</h3>
+            <p class="text-brand-muted">ML algorithms trained on real market data to give you precise valuations</p>
         </div>
-        <div class="feature-card bg-gray-900 p-8 rounded-lg border-2 border-gray-700 hover:border-car-red transition-all">
+        <div class="bg-white p-8 rounded-xl border border-brand-border hover:border-brand-primary hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             <div class="text-5xl mb-4">⚡</div>
-            <h3 class="text-2xl font-bold mb-3 text-car-red">Instant Results</h3>
-            <p class="text-car-grey">Get your car's predicted price in seconds with our fast prediction engine</p>
+            <h3 class="text-2xl font-bold mb-3 text-brand-dark">Instant Results</h3>
+            <p class="text-brand-muted">Get your car's predicted price in seconds with our fast prediction engine</p>
         </div>
-        <div class="feature-card bg-gray-900 p-8 rounded-lg border-2 border-gray-700 hover:border-car-red transition-all">
+        <div class="bg-white p-8 rounded-xl border border-brand-border hover:border-brand-primary hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             <div class="text-5xl mb-4">📊</div>
-            <h3 class="text-2xl font-bold mb-3 text-car-red">Track History</h3>
-            <p class="text-car-grey">Save and manage all your predictions in one convenient dashboard</p>
+            <h3 class="text-2xl font-bold mb-3 text-brand-dark">Track History</h3>
+            <p class="text-brand-muted">Save and manage all your predictions in one convenient dashboard</p>
         </div>
     </div>
 </div>
